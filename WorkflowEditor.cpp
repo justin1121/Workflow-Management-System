@@ -12,21 +12,22 @@ void displayWorkflowList(void){
 	char * filename = "list.txt";
 	fstream listFile;
 	listFile.open(filename, fstream::in);
-	list<string> list;
+	list<string> flowList;
 	
-	while(!listfile.eof()){
+	while(!listFile.eof()){
 		char * c_workflow;
-		workflow = listfile.getline(c_workflow, 256);
-		string workflow = c_workflow;
+		string workflow;
+		listFile.getline(c_workflow, 256);
+		workflow = c_workflow;
 		
-		list.push_back(workflow);
+		flowList.push_back(workflow);
 	}
 	
 	list<string>::iterator it;
 	
 	cout << "These are the available workflows: " << endl;
 	
-	for (it = list.begin(); it != mylist.end(); it++){
+	for (it = flowList.begin(); it != flowList.end(); it++){
 		cout << "	" << *it << endl;
 	}
 }

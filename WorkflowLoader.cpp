@@ -51,6 +51,6 @@ Task * WorkflowLoader::createNode(string task, string actor){
 	cout << "";
 }
 
-DesicionEdge * WorkflowLoader::createEdge(string decision){
+DecisionEdge * WorkflowLoader::createEdge(string decision){
 	cout << "";
 }
