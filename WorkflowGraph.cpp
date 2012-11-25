@@ -21,6 +21,6 @@ void WorkflowGraph::addNode(Task * task){
 
 }
 
-void WorkflowGraph::addEdge(DesicionEdge * edge){
+void WorkflowGraph::addEdge(DecisionEdge * edge){
 
 }
