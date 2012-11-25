@@ -13,7 +13,7 @@
 Task::Task(){
 	task  = "";
 	actor = "";
-	type = -1
+	type = -1;
 }
 
 string Task::getActor(void){
@@ -38,3 +38,4 @@ void Task::setTask(string task){
 void Task::setTraverseType(int type){
 	Task::type = type;
 }
+

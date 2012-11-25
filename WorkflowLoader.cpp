@@ -23,7 +23,7 @@ WorkflowGraph WorkflowLoader::generateGraph(void){
 }
 
 void WorkflowLoader::openFile(void){
-	file = new ifstream(fileName);
+	file = new ifstream(fileName.c_str());
 	
 	if(file->is_open()){
 		cout << "File has successfully been opened!\n";
@@ -43,14 +43,14 @@ void WorkflowLoader::closeFile(void){
 	}
 }
 
-string getNextLine(void){
-
+string WorkflowLoader::getNextLine(void){
+	cout << "";
 }
 
-Node * createNode(string task, string actor){
-
+Task * WorkflowLoader::createNode(string task, string actor){
+	cout << "";
 }
 
-DesicionEdge * createEdge(string decision){
-
+DesicionEdge * WorkflowLoader::createEdge(string decision){
+	cout << "";
 }

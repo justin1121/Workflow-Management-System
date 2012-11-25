@@ -9,8 +9,8 @@
 OBJS = Task.o \
 	   WorkflowGraph.o \
 	   WorkflowLoader.o \
-	   DecisionEdge.o \ 
-	   WorkflowEditor.o \ 
+	   DecisionEdge.o \
+	   WorkflowEditor.o \
 	   main.o
 	   
 CC = g++
