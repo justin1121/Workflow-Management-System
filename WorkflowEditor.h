@@ -10,8 +10,7 @@
 #include <fstream>
 #include <string>
 #include <list>
-using ::std::cout;
-using ::std::cin;
+using namespace std;
 
 // functions:
 // 		creating a workflow file
