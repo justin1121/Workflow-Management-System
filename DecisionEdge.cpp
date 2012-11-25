@@ -22,3 +22,4 @@ void DecisionEdge::setDecision(string decision){
 string DecisionEdge::getDecision(void){
 	return decision;
 }
+
