@@ -47,10 +47,20 @@ string WorkflowLoader::getNextLine(void){
 	cout << "";
 }
 
-Task * WorkflowLoader::createNode(string task, string actor){
-	cout << "";
+Task * WorkflowLoader::createNode(string task, string actor, int traverseType){
+  Task * t = new Task();
+
+  t->setTask(task);
+  t->setActor(task);
+  t->setTraverseType(traverseType);
+
+  return t;
 }
 
 DecisionEdge * WorkflowLoader::createEdge(string decision){
-	cout << "";
+  DecisionEdge * edge = new DecisionEdge();
+
+  edge->setDecision(decision);
+
+  return edge;
 }

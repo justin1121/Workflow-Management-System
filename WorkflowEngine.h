@@ -23,7 +23,7 @@ using ::std::cin;
 
 class DecisionEdge{
   public:
-	DecisionEdge();
+	  DecisionEdge();
     void setDecision(string);
     string getDecision(void);
   private:
@@ -43,8 +43,8 @@ class Task : AbstractNode{
     string getTask(void);
     void setActor(string);
     void setTask(string);
-	int getTraverseType(void);
-	void setTraverseType(int);
+	  int getTraverseType(void);
+	  void setTraverseType(int);
   private:
     string task;
     string actor;
@@ -53,13 +53,15 @@ class Task : AbstractNode{
 
 class WorkflowGraph{
   public:
-    WorkflowGraph();
     ~WorkflowGraph();
-    void addNode(Task *);
-    void addEdge(DecisionEdge *);
+    vector<pair<Task *, DecisionEdge *> > addNode(Task *);
+    vector<pair<Task *, DecisionEdge *> >  
+    addEdge(Task *, DecisionEdge *, 
+                    vector<pair<Task *, DecisionEdge *> >);
+    void addGraphVector(vector<pair<Task *, DecisionEdge *> > vec);
     // transversing graph will go here somewhere
   private:
-    vector<vector<pair<Task, DecisionEdge> > > nodes;
+    vector<vector<pair<Task *, DecisionEdge *> > > nodes;
 };
 
 class WorkflowLoader{
@@ -71,8 +73,8 @@ class WorkflowLoader{
     void openFile(void);
     void closeFile(void);
     string getNextLine(void);
-    Task * createNode(string, string);
+    Task * createNode(string, string, int);
     DecisionEdge * createEdge(string);
     string fileName;
-	ifstream * file;
+	  ifstream * file;
 };
