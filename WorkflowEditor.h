@@ -16,6 +16,7 @@ class WorkflowEditor{
 	private:
 		fstream workflowFile;
 		string * actorList;
+		int edgeCount;
 		
 	public:
 		WorkflowEditor(void);
@@ -28,9 +29,13 @@ class WorkflowEditor{
 		void displayWorkflowList(void);
 		
 		//		user interaction for creating a new workflow
-		void newWorkflow(void);
+		void createWorkflow(void);
 		
 		//		get the actors for a workflow
 		string * getActors(void);
+		
+		//		create a node/line for the workflow
+		
+		string createNode(string actor); 
 	
 };

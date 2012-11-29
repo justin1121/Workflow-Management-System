@@ -57,7 +57,7 @@ void WorkflowEditor::createWorkflowFile(string workflowId){
 }
 
 // this function creates a new workflow using the others as helper functions
-void WorkflowEditor::newWorkflow(void){
+void WorkflowEditor::createWorkflow(void){
 	//get the name of the workflow 
 	string workflowName;
 	cout << "Enter a name for the new workflow (no spaces): ";
@@ -75,7 +75,9 @@ void WorkflowEditor::newWorkflow(void){
 	int i_actor;
 	cin >> i_actor;
 	string actor = actorList[i_actor];
-	workflowFile << actor << ",";
+	//workflowFile << actor << ",";
+	string nodeString = createNode(actor);
+	workflowFile << nodeString << endl;
 	
 	
 	workflowFile.close();
@@ -101,9 +103,9 @@ string * WorkflowEditor::getActors(){
         }
         else
         {              
-                actorsArray[i] = actor;  
-                i++; 
-                cin >> actor;
+            actorsArray[i] = actor;  
+            i++; 
+            cin >> actor;
         }
     }
    
@@ -121,4 +123,47 @@ string * WorkflowEditor::getActors(){
     //delete [] actorsArray;
 }
 
-
+//	this function will get user input and create each of the nodes
+string WorkflowEditor::createNode(string actor){
+	string node = actor;
+	node += ",";
+	string task, transition, numEdges;
+	
+	//create a list of input questions
+ 	string * inputList = new string[sizeof(string) * 3];
+	inputList[0] = "\n\tTask: ";
+	inputList[1] = "\n\tTransition Type: ";
+	inputList[2] = "\n\tNumber of edges: ";
+	
+	cout << inputList[0];
+	cin >> task;
+	node += task;
+	node += ",";
+	
+	cout << inputList[1];
+	cin >> transition;
+	node += transition;
+	node += ",";
+	
+	cout << inputList[2];
+	cin >> numEdges;
+	node += numEdges;
+	node += ",";
+	
+	long l_numEdges = strtol(numEdges.c_str(), NULL, 10);
+	
+	if (transition.compare("decision") == 0){
+		string decision;
+		int i;
+		for(i = 0; i < l_numEdges; i++){
+			cout << "\n\tDecision " << 	i+1 << ": ";
+			cin >> decision;
+			node += decision;
+			node += ",";	
+		}
+	}
+	
+	cout << "\nNode created.\n";
+	
+	return node;
+}
