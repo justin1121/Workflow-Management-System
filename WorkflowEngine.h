@@ -12,14 +12,24 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <list>
 #include <utility>
 
 using ::std::string;
 using ::std::vector;
+using ::std::list;
 using ::std::pair;
 using ::std::ifstream;
 using ::std::cout;
 using ::std::cin;
+
+enum trans_enum{
+  SEQUENTIAL = 0,
+  FORK,
+  MERGE,
+  JOIN,
+  DESICION
+};
 
 class DecisionEdge{
   public:
@@ -54,10 +64,6 @@ class Task : AbstractNode{
 class WorkflowGraph{
   public:
     ~WorkflowGraph();
-    vector<pair<Task *, DecisionEdge *> > addNode(Task *);
-    vector<pair<Task *, DecisionEdge *> >  
-    addEdge(Task *, DecisionEdge *, 
-                    vector<pair<Task *, DecisionEdge *> >);
     void addGraphVector(vector<pair<Task *, DecisionEdge *> > vec);
     // transversing graph will go here somewhere
   private:
@@ -69,12 +75,17 @@ class WorkflowLoader{
     WorkflowLoader(string);
     ~WorkflowLoader(void);
     WorkflowGraph generateGraph(void);
-  private:
     void openFile(void);
     void closeFile(void);
+  private:
     string getNextLine(void);
     Task * createNode(string, string, int);
     DecisionEdge * createEdge(string);
+    vector<pair<Task *, DecisionEdge *> > addNodeVector(Task *);
+    vector<pair<Task *, DecisionEdge *> >  
+    addEdgeVector(Task *, DecisionEdge *, 
+                    vector<pair<Task *, DecisionEdge *> >);
+
     string fileName;
 	  ifstream * file;
 };

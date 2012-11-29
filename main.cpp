@@ -1,10 +1,12 @@
 #include <iostream>
 #include "WorkflowEditor.h"
-using namespace std;
 
 int main(){
-	WorkflowEditor editor;
-	string * strings = editor.getActors();
-	
+	WorkflowLoader load("test.txt");
+
+  load.openFile();
+  load.generateGraph();
+  load.closeFile();
+
 	return 0;
 }
