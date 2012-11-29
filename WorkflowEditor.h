@@ -12,16 +12,30 @@
 #include <list>
 using namespace std;
 
-// functions:
-// 		creating a workflow file
-fstream * createWorkflowFile(string workflowId);
-
-//		display the list of workflows
-void displayWorkflowList(void);
-
-//		user interaction for creating a new workflow
-void newWorkflow(void);
-
-//		get the actors for a workflow
-string * getActors(void);
-
+class WorkflowEditor{
+	private:
+		fstream workflowFile;
+		string * actorList;
+		int edgeCount;
+		
+	public:
+		WorkflowEditor(void);
+		~WorkflowEditor(void);
+		
+		// 		creating a workflow file
+		void createWorkflowFile(string workflowId);
+		
+		//		display the list of workflows
+		void displayWorkflowList(void);
+		
+		//		user interaction for creating a new workflow
+		void createWorkflow(void);
+		
+		//		get the actors for a workflow
+		string * getActors(void);
+		
+		//		create a node/line for the workflow
+		
+		string createNode(string actor); 
+	
+};
