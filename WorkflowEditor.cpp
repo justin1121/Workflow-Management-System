@@ -12,7 +12,7 @@ WorkflowEditor::WorkflowEditor(){
 }
 
 WorkflowEditor::~WorkflowEditor(){
-	
+
 }
 
 //	display a list of existing workflows
@@ -43,8 +43,9 @@ void WorkflowEditor::displayWorkflowList(void){
 //	This function opens the file that will be used to store the workflow
 //	also, this is inputting the first line which will be the name of the workflow
 void WorkflowEditor::createWorkflowFile(string workflowId){
-	workflowFile.open(workflowId.c_str(), fstream::out);
-		
+	string filename = workflowId.append(".wf");
+	workflowFile.open(filename.c_str(), fstream::out);
+			
 	//check of the file is open	
 	if(!workflowFile.is_open()){
 		cout << "File could not be opened successfully: " << workflowId << endl;
@@ -56,33 +57,6 @@ void WorkflowEditor::createWorkflowFile(string workflowId){
 
 }
 
-// this function creates a new workflow using the others as helper functions
-void WorkflowEditor::createWorkflow(void){
-	//get the name of the workflow 
-	string workflowName;
-	cout << "Enter a name for the new workflow (no spaces): ";
-	cin >> workflowName;
-	cout << endl;
-	
-	//create the workflow file with the given name
-	createWorkflowFile(workflowName);
-	
-	// get the actors in the workflow
-	actorList = getActors();
-	
-	//get the starting node 
-	cout << "For the starting position: \n\tactor(number): ";
-	int i_actor;
-	cin >> i_actor;
-	string actor = actorList[i_actor];
-	//workflowFile << actor << ",";
-	string nodeString = createNode(actor);
-	workflowFile << nodeString << endl;
-	
-	
-	workflowFile.close();
-}
-
 string * WorkflowEditor::getActors(){
 	cout << "How many actors will you need for your workflow?\n\n";
    
@@ -91,26 +65,22 @@ string * WorkflowEditor::getActors(){
     string * actorsArray = new string[sizeof(string) * actorSize];
    
     cout << "\nEnter a name of an actor to use in your workflow, followed by ENTER.\n\n";
-	cin >> actorsArray[0];	
 	
     string actor;
-    int i = 1;
-    while(actor.compare("0")!=0) {                
-        if(i>actorSize-1)
-        {
-            cout << "\n\nYou've reached your maximum amount of actors.\n\n";
+    int i = 0;
+    while(i <= actorSize) {                	
+		if(i == actorSize)
+		{
+            cout << "\nYou've reached your maximum amount of actors.\n";
             break;
         }
         else
-        {              
-            actorsArray[i] = actor;  
+        {    
+			cin >> actorsArray[i];	  
             i++; 
-            cin >> actor;
         }
     }
-   
-    cout << "\n\nThank you!\n\n";
-	
+   	
 	return actorsArray;
    
     //int ii = 0;
@@ -136,7 +106,8 @@ string WorkflowEditor::createNode(string actor){
 	inputList[2] = "\n\tNumber of edges: ";
 	
 	cout << inputList[0];
-	cin >> task;
+	cin.ignore();
+	getline(cin,task);
 	node += task;
 	node += ",";
 	
@@ -151,8 +122,9 @@ string WorkflowEditor::createNode(string actor){
 	node += ",";
 	
 	long l_numEdges = strtol(numEdges.c_str(), NULL, 10);
+	edgeCount = l_numEdges;
 	
-	if (transition.compare("decision") == 0){
+	if (transition.compare("5") == 0){
 		string decision;
 		int i;
 		for(i = 0; i < l_numEdges; i++){
@@ -166,4 +138,46 @@ string WorkflowEditor::createNode(string actor){
 	cout << "\nNode created.\n";
 	
 	return node;
+}
+
+// this function creates a new workflow using the others as helper functions
+void WorkflowEditor::createWorkflow(void){
+	//get the name of the workflow 
+	string workflowName;
+	cout << "Enter a name for the new workflow (no spaces): ";
+	cin >> workflowName;
+	cout << endl;
+	
+	//create the workflow file with the given name
+	createWorkflowFile(workflowName);
+	
+	// get the actors in the workflow
+	actorList = getActors();
+	
+	//get the starting node 
+	cout << "For the starting position: \n\tactor(number): ";
+	int i_actor;
+	cin >> i_actor;
+	string actor = actorList[i_actor];
+	string nodeString = createNode(actor);
+	workflowFile << nodeString << endl;
+	
+	// continue to create nodes till the end
+	while (edgeCount != 0){
+		cout << "\nFor the next node: \n\tactor(number): ";
+		cin >> i_actor;
+		actor = actorList[i_actor];
+		nodeString = createNode(actor);
+		workflowFile << nodeString << endl;
+	}
+	
+	// get the terminal node information
+	cout << "\nFor the terminal position: \n\tactor(number): ";
+	cin >> i_actor;
+	actor = actorList[i_actor];
+	workflowFile << actor << ",0,7,0" << endl;
+	
+	cout << "\nWorkflow file created." << endl;
+	
+	workflowFile.close();
 }

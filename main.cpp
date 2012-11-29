@@ -1,7 +1,12 @@
 #include <iostream>
 #include "WorkflowEngine.h"
+#include "WorkflowEditor.h"
 
 int main(){
+	WorkflowEditor editor;
+	editor.createWorkflow();
+
+
 	WorkflowLoader load("test.txt");
 
   load.openFile();
