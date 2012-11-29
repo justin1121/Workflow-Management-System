@@ -1,5 +1,5 @@
 #include <iostream>
-#include "WorkflowEditor.h"
+#include "WorkflowEngine.h"
 
 int main(){
 	WorkflowLoader load("test.txt");
