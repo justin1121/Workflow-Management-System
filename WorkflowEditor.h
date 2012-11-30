@@ -14,9 +14,9 @@ using namespace std;
 
 class WorkflowEditor{
 	private:
-		fstream workflowFile;
-		string * actorList;
-		int edgeCount;
+		fstream 	workflowFile;
+		string * 	actorList;
+		int 		edgeCount;
 		
 	public:
 		WorkflowEditor(void);

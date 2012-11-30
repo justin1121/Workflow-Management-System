@@ -3,15 +3,22 @@
 #include "WorkflowEditor.h"
 
 int main(){
-	WorkflowEditor editor;
-	editor.createWorkflow();
+	
+	int test;
+	cout << "test number [Editor: 1, Loader: 2]: ";
+	cin >> test;
 
-
-	WorkflowLoader load("test.txt");
-
-  load.openFile();
-  load.generateGraph();
-  load.closeFile();
-
+	switch(test){
+		case 1:{
+			WorkflowEditor editor;
+			editor.createWorkflow();
+		}	
+		case 2:{
+			WorkflowLoader load("test.txt");
+  		load.openFile();
+  		load.generateGraph();
+  		load.closeFile();
+		}
+	}
 	return 0;
 }

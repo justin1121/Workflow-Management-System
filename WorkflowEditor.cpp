@@ -71,7 +71,7 @@ string * WorkflowEditor::getActors(){
     while(i <= actorSize) {                	
 		if(i == actorSize)
 		{
-            cout << "\nYou've reached your maximum amount of actors.\n";
+            cout << "\nActors added.\n";
             break;
         }
         else
@@ -81,16 +81,18 @@ string * WorkflowEditor::getActors(){
         }
     }
    	
+	cout << "\nActor List: \n";
+	
+    int ii = 0;
+    while (ii < actorSize){
+      cout << "\t";
+	  cout << ii;
+      cout << actorsArray[ii] << endl;
+      ii++;
+    }
+	
 	return actorsArray;
-   
-    //int ii = 0;
-    //while (ii < actorSize){
-        //cout << ii;
-        //cout << actorsArray[ii] << endl;
-        //ii++;
-    //}
-    //cout << "Hey, you're finished";
-    //delete [] actorsArray;
+	
 }
 
 //	this function will get user input and create each of the nodes
@@ -171,11 +173,13 @@ void WorkflowEditor::createWorkflow(void){
 		workflowFile << nodeString << endl;
 	}
 	
+	/*
 	// get the terminal node information
 	cout << "\nFor the terminal position: \n\tactor(number): ";
 	cin >> i_actor;
 	actor = actorList[i_actor];
 	workflowFile << actor << ",0,7,0" << endl;
+	*/
 	
 	cout << "\nWorkflow file created." << endl;
 	
