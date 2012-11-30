@@ -1,0 +1,5 @@
+test.txt
+Justin,This is a test,6,1
+Justin,too good,1,1
+Justin,hahahaha,1,1
+Bob, ,7,0
