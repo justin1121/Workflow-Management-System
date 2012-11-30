@@ -25,25 +25,31 @@ WorkflowLoader::~WorkflowLoader(void){
 	closeFile();
 }
 
-WorkflowGraph WorkflowLoader::generateGraph(void){
-  string line,
-         actor,
-         task, 
-         transType,
-         numEdges;
-  list<string> desicions;
+WorkflowGraph WorkflowLoader::createGraph(void){
   WorkflowGraph graph;
+  StartStopNode * node;
+  vector<pair<AbstractNode *, DecisionEdge *> > vec;
+
+  graph.setTitle(getNextLine());
+
+  node = createStartStopNode(getNextLine());
+
+  pair<AbstractNode *, DecisionEdge *> p(node, NULL);
+  vec.push_back(p);
+ 
+  graph.addGraphVector(vec);
+}
+
+WorkflowGraph WorkflowLoader::generateGraph(WorkflowGraph graph){
+  string line;
+  list<string> desicions;
+  Task * task;
 
   while((line = getNextLine()).compare("0") != 0){
-    stringstream stream(line, ios_base::in);
-
-    getline(stream, actor, ',');
-    getline(stream, task, ',');
-    getline(stream, transType, ',');
-    getline(stream, numEdges, ',');
-    
-    switch(strtol(transType.c_str(), NULL, 2)){
+    task = createNode(line);
+    switch(task->getTraverseType(), NULL, 2){
       case SEQUENTIAL:
+        
         break;
       case FORK:
         break;
@@ -52,16 +58,9 @@ WorkflowGraph WorkflowLoader::generateGraph(void){
       case JOIN:
         break;
       case DESICION:
-        int num;
-        num = strtol(numEdges.c_str(), NULL, 2);
-        for(int i = 0; i < num; i++){
-          string desicion;
-
-          getline(stream, desicion, ',');
-          desicions.push_back(desicion);
-
-          i++;
-        }
+        list<string> desicions;
+        
+        desicions = createDesicionList(line, task->getNumEdges());
         break;
     }
   }
@@ -101,12 +100,23 @@ string WorkflowLoader::getNextLine(void){
   return line;
 }
 
-Task * WorkflowLoader::createNode(string task, string actor, int traverseType){
+Task * WorkflowLoader::createNode(string line){
   Task * t = new Task();
+  string actor,
+         task,
+         transType,
+         numEdges;
+  stringstream stream(line, ios_base::in);
+
+  getline(stream, actor, ',');
+  getline(stream, task, ',');
+  getline(stream, transType, ',');
+  getline(stream, numEdges, ',');
 
   t->setTask(task);
-  t->setActor(task);
-  t->setTraverseType(traverseType);
+  t->setActor(actor);
+  t->setTraverseType(strtol(transType.c_str(), NULL, 2));
+  t->setNumEdges(strtol(numEdges.c_str(), NULL, 2));
 
   return t;
 }
@@ -119,23 +129,52 @@ DecisionEdge * WorkflowLoader::createEdge(string decision){
   return edge;
 }
 
-vector<pair<Task *, DecisionEdge *> >  
-WorkflowLoader::addNodeVector(Task * task){
-  vector<pair<Task *, DecisionEdge *> > vec;
+vector<pair<AbstractNode *, DecisionEdge *> >  
+WorkflowLoader::addNodeVector(AbstractNode * node){
+  vector<pair<AbstractNode *, DecisionEdge *> > vec;
 
-  pair<Task *, DecisionEdge *> p(task, NULL);
+  pair<AbstractNode *, DecisionEdge *> p(node, NULL);
    
   vec.push_back(p);
 
   return vec;
 }
 
-vector<pair<Task *, DecisionEdge *> >  
-WorkflowLoader::addEdgeVector(Task * task, DecisionEdge * edge,
-                              vector<pair<Task *, DecisionEdge *> > node){
-  pair<Task *, DecisionEdge *> p(task, edge);
+vector<pair<AbstractNode *, DecisionEdge *> >  
+WorkflowLoader::addEdgeVector(AbstractNode * task, DecisionEdge * edge,
+                              vector<pair<AbstractNode *, DecisionEdge *> > node){
+  pair<AbstractNode *, DecisionEdge *> p(task, edge);
   
   node.push_back(p);
+
+  return node;
+}
+
+list<string> WorkflowLoader::createDesicionList(string line, int num){
+  stringstream stream(line, ios_base::in);
+  list<string> desicions;
+
+  for(int i = 0; i < num; i++){
+    string desicion;
+
+    getline(stream, desicion, ',');
+    desicions.push_back(desicion);
+  } 
+
+  return desicions;
+}
+
+StartStopNode * WorkflowLoader::createStartStopNode(string line){
+  StartStopNode * node = new StartStopNode();
+  string message,
+         transType;
+  stringstream stream(line, ios_base::in);
+
+  getline(stream, message);
+  getline(stream, transType);
+
+  node->setMessage(message);
+  node->setTraverseType(strtol(transType.c_str(), NULL, 2));
 
   return node;
 }

@@ -14,6 +14,14 @@ WorkflowGraph::~WorkflowGraph(){
   // iterate through everything and delete the shit out of them
 }
 
-void WorkflowGraph::addGraphVector(vector<pair<Task *, DecisionEdge *> > vec){
+void WorkflowGraph::addGraphVector(vector<pair<AbstractNode *, DecisionEdge *> > vec){
   nodes.push_back(vec);
+}
+
+void WorkflowGraph::setTitle(string title){
+  WorkflowGraph::title = title;
+}
+
+string WorkflowGraph::getTitle(void){
+  return title;
 }

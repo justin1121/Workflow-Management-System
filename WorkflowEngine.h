@@ -15,6 +15,8 @@
 #include <list>
 #include <utility>
 
+#include "AbstractNode.h"
+
 using ::std::string;
 using ::std::vector;
 using ::std::list;
@@ -24,11 +26,13 @@ using ::std::cout;
 using ::std::cin;
 
 enum trans_enum{
-  SEQUENTIAL = 0,
+  SEQUENTIAL = 1,
   FORK,
   MERGE,
   JOIN,
-  DESICION
+  DESICION,
+  START,
+  STOP
 };
 
 class DecisionEdge{
@@ -40,52 +44,63 @@ class DecisionEdge{
     string decision;
 };
 
-class AbstractNode{
-  public:
-    virtual int getTraverseType(void) = 0;
-    virtual void setTraverseType(int) = 0;
-};
-
-class Task : AbstractNode{
+class Task : public AbstractNode{
   public:
     Task();
     string getActor(void);
     string getTask(void);
+    int getNumEdges(void);
+    int getTraverseType(void);
     void setActor(string);
     void setTask(string);
-	  int getTraverseType(void);
-	  void setTraverseType(int);
+    void setNumEdges(int);
+    void setTraverseType(int);
   private:
     string task;
     string actor;
-    int type;
+    int numEdges;
+};
+
+class StartStopNode : public AbstractNode{
+  public:
+    string getMessage(void);
+    int getTraverseType(void);
+    void setMessage(string);
+    void setTraverseType(int);
+  private:
+    string message;
 };
 
 class WorkflowGraph{
   public:
     ~WorkflowGraph();
-    void addGraphVector(vector<pair<Task *, DecisionEdge *> > vec);
+    void addGraphVector(vector<pair<AbstractNode *, DecisionEdge *> > vec);
+    string getTitle(void);
+    void setTitle(string);
     // transversing graph will go here somewhere
   private:
-    vector<vector<pair<Task *, DecisionEdge *> > > nodes;
+    vector<vector<pair<AbstractNode *, DecisionEdge *> > > nodes;
+    string title;
 };
 
 class WorkflowLoader{
   public:
     WorkflowLoader(string);
     ~WorkflowLoader(void);
-    WorkflowGraph generateGraph(void);
+    WorkflowGraph createGraph(void);
+    WorkflowGraph generateGraph(WorkflowGraph);
     void openFile(void);
     void closeFile(void);
   private:
     string getNextLine(void);
-    Task * createNode(string, string, int);
+    Task * createNode(string);
     DecisionEdge * createEdge(string);
-    vector<pair<Task *, DecisionEdge *> > addNodeVector(Task *);
-    vector<pair<Task *, DecisionEdge *> >  
-    addEdgeVector(Task *, DecisionEdge *, 
-                    vector<pair<Task *, DecisionEdge *> >);
-
+    vector<pair<AbstractNode *, DecisionEdge *> > addNodeVector(AbstractNode *);
+    vector<pair<AbstractNode *, DecisionEdge *> >  
+    addEdgeVector(AbstractNode *, DecisionEdge *, 
+                    vector<pair<AbstractNode *, DecisionEdge *> >);
+    list<string> createDesicionList(string, int);
+    StartStopNode * createStartStopNode(string);
     string fileName;
 	  ifstream * file;
 };

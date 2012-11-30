@@ -27,6 +27,10 @@ int Task::getTraverseType(void){
 	return type;
 }
 
+int Task::getNumEdges(void){
+  return numEdges;
+}
+
 void Task::setActor(string actor){
 	Task::actor = actor;
 }
@@ -39,3 +43,6 @@ void Task::setTraverseType(int type){
 	Task::type = type;
 }
 
+void Task::setNumEdges(int num){
+  Task::numEdges = num;
+}
