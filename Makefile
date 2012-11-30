@@ -6,7 +6,9 @@
 #Description:
 #The make file that is used to build the generate executable.
 
-OBJS = Task.o \
+OBJS = AbstractNode.o \
+     Task.o \
+     StartStopNode.o \
 	   WorkflowGraph.o \
 	   WorkflowLoader.o \
 	   DecisionEdge.o \
