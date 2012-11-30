@@ -3,6 +3,7 @@
 #include "WorkflowEditor.h"
 
 int main(){
+	cout << endl;
 	int test;
 	cout << "test number [Editor: 1, Loader: 2]: ";
 	cin >> test;
@@ -11,6 +12,7 @@ int main(){
 		case 1:{
 			WorkflowEditor editor;
 			editor.createWorkflow();
+			break;
 		}	
 		case 2:{
 			WorkflowLoader load("test.txt");
@@ -19,6 +21,7 @@ int main(){
       graph = load.createGraph(); 
       graph = load.generateGraph(graph);
   		load.closeFile();
+			break;
 		}
 	}
 	return 0;

@@ -12,6 +12,14 @@
 #include <list>
 using namespace std;
 
+enum trans_enum{
+  SEQUENTIAL = 0,
+  FORK,
+  MERGE,
+  JOIN,
+  DESICION
+};
+
 class WorkflowEditor{
 	private:
 		fstream 	workflowFile;

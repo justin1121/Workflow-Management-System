@@ -86,7 +86,7 @@ string * WorkflowEditor::getActors(){
     int ii = 0;
     while (ii < actorSize){
       cout << "\t";
-	  cout << ii;
+	  cout << ii << ": ";
       cout << actorsArray[ii] << endl;
       ii++;
     }
