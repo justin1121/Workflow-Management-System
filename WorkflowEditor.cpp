@@ -17,16 +17,13 @@ WorkflowEditor::~WorkflowEditor(){
 
 //	display a list of existing workflows
 void WorkflowEditor::displayWorkflowList(void){
-	char * filename = "list.txt";
 	fstream listFile;
-	listFile.open(filename, fstream::in);
+	listFile.open("list.txt", fstream::in);
 	list<string> flowList;
 	
 	while(!listFile.eof()){
-		char * c_workflow;
 		string workflow;
-		listFile.getline(c_workflow, 256);
-		workflow = c_workflow;
+		getline(listFile, workflow);
 		
 		flowList.push_back(workflow);
 	}
@@ -43,7 +40,8 @@ void WorkflowEditor::displayWorkflowList(void){
 //	This function opens the file that will be used to store the workflow
 //	also, this is inputting the first line which will be the name of the workflow
 void WorkflowEditor::createWorkflowFile(string workflowId){
-	string filename = workflowId.append(".wf");
+	string filename = workflowId;
+	filename.append(".wf");
 	workflowFile.open(filename.c_str(), fstream::out);
 			
 	//check of the file is open	
@@ -99,13 +97,14 @@ string * WorkflowEditor::getActors(){
 string WorkflowEditor::createNode(string actor){
 	string node = actor;
 	node += ",";
-	string task, transition, numEdges;
+	string task, numEdges;
+	int transition;
 	
 	//create a list of input questions
  	string * inputList = new string[sizeof(string) * 3];
-	inputList[0] = "\n\tTask: ";
-	inputList[1] = "\n\tTransition Type: ";
-	inputList[2] = "\n\tNumber of edges: ";
+	inputList[0] = "\tTask: ";
+	inputList[1] = "\tTransition Type: ";
+	inputList[2] = "/tNumber of Edges: ";
 	
 	cout << inputList[0];
 	cin.ignore();
@@ -115,17 +114,23 @@ string WorkflowEditor::createNode(string actor){
 	
 	cout << inputList[1];
 	cin >> transition;
-	node += transition;
+	stringstream transString;
+	transString << transition;
+	node += transString.str();
 	node += ",";
 	
-	cout << inputList[2];
-	cin >> numEdges;
-	node += numEdges;
-	node += ",";
+	//cout << inputList[2];
+	//cin >> numEdges;
+	//node += numEdges;
+	//node += ",";
 	
-	long l_numEdges = strtol(numEdges.c_str(), NULL, 10);
-	edgeCount = l_numEdges;
+	//long l_numEdges = strtol(numEdges.c_str(), NULL, 10);
+	//edgeCount = l_numEdges;
 	
+	//	handle transition
+	node += handleTransition(transition);
+	
+	/*
 	if (transition.compare("5") == 0){
 		string decision;
 		int i;
@@ -136,10 +141,89 @@ string WorkflowEditor::createNode(string actor){
 			node += ",";	
 		}
 	}
+	*/
 	
 	cout << "\nNode created.\n";
 	
 	return node;
+}
+
+//		add new workflow to the list.txt
+void WorkflowEditor::addWorkflow2List (string name){
+	fstream listfile;
+	listfile.open("list.txt", fstream::out);
+	
+	listfile << name << endl;
+	
+	listfile.close();
+}
+
+//		handle the different types of transition that can be chosen
+string WorkflowEditor::handleTransition(int type){
+	switch(type){
+		
+		//	sequential
+		case 1:{
+			edgeCount = 1;
+			return "1,0,";
+		}
+		
+		//	fork
+		case 2:{
+			string forkNum;
+			cout << "\tNumber of forks: ";
+			cin >> forkNum;
+			edgeCount = strtol(forkNum.c_str(), NULL, 10);
+			forkNum =+ ",0,";
+			return forkNum;
+		}
+		
+		//	merge
+		case 3:{
+			cout << "\nMerging." << endl;
+			edgeCount = 1;
+			return "1,0,";
+		}
+		
+		//	join
+		case 4:{
+			cout << "\nJoining." << endl;
+			edgeCount = 1;
+			return "1,0,";
+		}
+		
+		//	decision
+		case 5:{
+			string decision;
+			string allDecisions = "";
+			int numDecisions;
+			cout << "\tNumber of decisions: ";
+			cin >> numDecisions;
+			edgeCount = numDecisions;
+			
+			int i;
+			for(i = 0; i < numDecisions; i++){
+				cout << "\n\tDecision " << 	i+1 << ": ";
+				cin.ignore();
+				getline(cin, decision);
+				allDecisions += decision;
+				allDecisions += ",";
+			
+			}
+			return allDecisions;
+		}
+		
+		// 	stop
+		case 7:{
+			edgeCount = 0;
+			return "0,0,";
+		}
+		
+		default :{
+			cout << "\nNot an available transition type." << endl;
+			exit(1);
+		}
+	}
 }
 
 // this function creates a new workflow using the others as helper functions
@@ -156,8 +240,17 @@ void WorkflowEditor::createWorkflow(void){
 	// get the actors in the workflow
 	actorList = getActors();
 	
+	// show the different types of transitions
+	string transArray [] = {"SEQUENTIAL", "FORK", "MERGE", "JOIN", "DECISION","START", "STOP"}; 
+	cout << "\nTransition list:";
+	int i;
+	for(i = 0; i < 7; i++){
+		cout << "\n\t" << i+1;
+		cout << ": " << transArray[i];
+	}
+	
 	//get the starting node 
-	cout << "For the starting position: \n\tactor(number): ";
+	cout << "\n\nFor the starting position: \n\tActor(number): ";
 	int i_actor;
 	cin >> i_actor;
 	string actor = actorList[i_actor];
@@ -166,7 +259,7 @@ void WorkflowEditor::createWorkflow(void){
 	
 	// continue to create nodes till the end
 	while (edgeCount != 0){
-		cout << "\nFor the next node: \n\tactor(number): ";
+		cout << "\nFor the next node: \n\tActor(number): ";
 		cin >> i_actor;
 		actor = actorList[i_actor];
 		nodeString = createNode(actor);
@@ -180,6 +273,9 @@ void WorkflowEditor::createWorkflow(void){
 	actor = actorList[i_actor];
 	workflowFile << actor << ",0,7,0" << endl;
 	*/
+	
+	// add the workflow to the list.txt
+	addWorkflow2List(workflowName);
 	
 	cout << "\nWorkflow file created." << endl;
 	
