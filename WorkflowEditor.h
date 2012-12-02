@@ -36,6 +36,9 @@ class WorkflowEditor{
 		//		handle the different types of transition that can be chosen
 		string handleTransition(int type);
 		
+		//		Print the Editor Menu
+		void printMenu(void);
+		
 	public:
 		WorkflowEditor(void);
 		~WorkflowEditor(void);
