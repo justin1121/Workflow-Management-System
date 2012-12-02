@@ -3,7 +3,7 @@
  *	Date: 				November 20, 2012
  *	Organization:	Dalhousie - Faculty of Computer Science	
  * 
- *	Description: 	The Editor provides the user with the means to create new Workflow
+ *	Description: 	The Editor provides the user with the means to create a new Workflow
  */
 #include "WorkflowEditor.h"
 
@@ -56,13 +56,13 @@ void WorkflowEditor::createWorkflowFile(string workflowId){
 }
 
 string * WorkflowEditor::getActors(){
-	cout << "How many actors will you need for your workflow?\n\n";
+	cout << "How many actors will you need for your workflow?: ";
    
     int actorSize;
     cin >> actorSize;        
     string * actorsArray = new string[sizeof(string) * actorSize];
    
-    cout << "\nEnter a name of an actor to use in your workflow, followed by ENTER.\n\n";
+    cout << "\n\nEnter a name of an actor to use in your workflow, followed by ENTER:\n";
 	
     string actor;
     int i = 0;
@@ -84,7 +84,7 @@ string * WorkflowEditor::getActors(){
     int ii = 0;
     while (ii < actorSize){
       cout << "\t";
-	  cout << ii << ": ";
+	  cout << ii+1 << ": ";
       cout << actorsArray[ii] << endl;
       ii++;
     }
@@ -151,7 +151,7 @@ string WorkflowEditor::createNode(string actor){
 //		add new workflow to the list.txt
 void WorkflowEditor::addWorkflow2List (string name){
 	fstream listfile;
-	listfile.open("list.txt", fstream::out);
+	listfile.open("list.txt", fstream::out | fstream::app);
 	
 	listfile << name << endl;
 	
@@ -170,12 +170,14 @@ string WorkflowEditor::handleTransition(int type){
 		
 		//	fork
 		case 2:{
-			string forkNum;
+			string forkNum, forkString;
+			
 			cout << "\tNumber of forks: ";
 			cin >> forkNum;
 			edgeCount = strtol(forkNum.c_str(), NULL, 10);
-			forkNum =+ ",0,";
-			return forkNum;
+			forkString += forkNum;
+			forkString += ",0,";
+			return forkString;
 		}
 		
 		//	merge
@@ -213,6 +215,12 @@ string WorkflowEditor::handleTransition(int type){
 			return allDecisions;
 		}
 		
+		//	start
+		case 6:{
+			edgeCount = 1;
+			return "1,0,";
+		}
+		
 		// 	stop
 		case 7:{
 			edgeCount = 0;
@@ -232,7 +240,6 @@ void WorkflowEditor::createWorkflow(void){
 	string workflowName;
 	cout << "Enter a name for the new workflow (no spaces): ";
 	cin >> workflowName;
-	cout << endl;
 	
 	//create the workflow file with the given name
 	createWorkflowFile(workflowName);
@@ -253,7 +260,7 @@ void WorkflowEditor::createWorkflow(void){
 	cout << "\n\nFor the starting position: \n\tActor(number): ";
 	int i_actor;
 	cin >> i_actor;
-	string actor = actorList[i_actor];
+	string actor = actorList[i_actor-1];
 	string nodeString = createNode(actor);
 	workflowFile << nodeString << endl;
 	
@@ -261,7 +268,7 @@ void WorkflowEditor::createWorkflow(void){
 	while (edgeCount != 0){
 		cout << "\nFor the next node: \n\tActor(number): ";
 		cin >> i_actor;
-		actor = actorList[i_actor];
+		actor = actorList[i_actor-1];
 		nodeString = createNode(actor);
 		workflowFile << nodeString << endl;
 	}
