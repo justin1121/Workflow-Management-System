@@ -1,0 +1,12 @@
+BuyingCoffee
+Customer,Enter Coffee Shop,6,1,0,
+Customer,Place Order,1,1,0,
+Cashier,Enter Order into the POS,1,1,0,
+Cashier,Record Customer Name,1,1,0,
+Customer,Pay For Order,1,1,0,
+Cashier,Pass Order to Barista,1,1,0,
+Barista,Prepare Beverage,2,2,0,
+Barista,Place Beverage on Counter,1,1,0,
+Barista,Call Customer Name,1,1,0,
+Customer,Pickup Beverage,4,1,0,
+Customer,Leave Coffee Shop,7,0,0,

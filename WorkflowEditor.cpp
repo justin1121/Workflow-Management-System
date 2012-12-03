@@ -3,7 +3,7 @@
  *	Date: 				November 20, 2012
  *	Organization:	Dalhousie - Faculty of Computer Science	
  * 
- *	Description: 	The Editor provides the user with the means to create a new Workflow
+ *	Description: 	The Editor provides the user with the means to create new Workflow
  */
 #include "WorkflowEditor.h"
 
@@ -18,7 +18,7 @@ WorkflowEditor::~WorkflowEditor(){
 //	display a list of existing workflows
 void WorkflowEditor::displayWorkflowList(void){
 	fstream listFile;
-	listFile.open("list.txt", fstream::in);
+	listFile.open("test/list.txt", fstream::in);
 	list<string> flowList;
 	
 	while(!listFile.eof()){
@@ -40,7 +40,8 @@ void WorkflowEditor::displayWorkflowList(void){
 //	This function opens the file that will be used to store the workflow
 //	also, this is inputting the first line which will be the name of the workflow
 void WorkflowEditor::createWorkflowFile(string workflowId){
-	string filename = workflowId;
+	string filename = "test/";
+	filename.append(workflowId);
 	filename.append(".wf");
 	workflowFile.open(filename.c_str(), fstream::out);
 			
@@ -56,13 +57,13 @@ void WorkflowEditor::createWorkflowFile(string workflowId){
 }
 
 string * WorkflowEditor::getActors(){
-	cout << "How many actors will you need for your workflow?: ";
+	cout << "How many actors will you need for your workflow?\n\n";
    
     int actorSize;
     cin >> actorSize;        
     string * actorsArray = new string[sizeof(string) * actorSize];
    
-    cout << "\n\nEnter a name of an actor to use in your workflow, followed by ENTER:\n";
+    cout << "\nEnter a name of an actor to use in your workflow, followed by ENTER.\n\n";
 	
     string actor;
     int i = 0;
@@ -151,7 +152,7 @@ string WorkflowEditor::createNode(string actor){
 //		add new workflow to the list.txt
 void WorkflowEditor::addWorkflow2List (string name){
 	fstream listfile;
-	listfile.open("list.txt", fstream::out | fstream::app);
+	listfile.open("test/list.txt", fstream::out | fstream::app);
 	
 	listfile << name << endl;
 	
@@ -171,6 +172,7 @@ string WorkflowEditor::handleTransition(int type){
 		//	fork
 		case 2:{
 			string forkNum, forkString;
+			forkString = "2,";
 			
 			cout << "\tNumber of forks: ";
 			cin >> forkNum;
@@ -215,12 +217,6 @@ string WorkflowEditor::handleTransition(int type){
 			return allDecisions;
 		}
 		
-		//	start
-		case 6:{
-			edgeCount = 1;
-			return "1,0,";
-		}
-		
 		// 	stop
 		case 7:{
 			edgeCount = 0;
@@ -234,9 +230,20 @@ string WorkflowEditor::handleTransition(int type){
 	}
 }
 
-//		Print the Editor Menu
-void WorkflowEditor::printMenu(void){
-
+// this function creates a new workflow using the others as helper functions
+void WorkflowEditor::createWorkflow(void){
+	//get the name of the workflow 
+	string workflowName;
+	cout << "Enter a name for the new workflow (no spaces): ";
+	cin >> workflowName;
+	cout << endl;
+	
+	//create the workflow file with the given name
+	createWorkflowFile(workflowName);
+	
+	// get the actors in the workflow
+	actorList = getActors();
+	
 	// show the different types of transitions
 	string transArray [] = {"SEQUENTIAL", "FORK", "MERGE", "JOIN", "DECISION","START", "STOP"}; 
 	cout << "\nTransition list:";
@@ -245,23 +252,6 @@ void WorkflowEditor::printMenu(void){
 		cout << "\n\t" << i+1;
 		cout << ": " << transArray[i];
 	}
-	return;
-}
-
-// this function creates a new workflow using the others as helper functions
-void WorkflowEditor::createWorkflow(void){
-	//get the name of the workflow 
-	string workflowName;
-	cout << "Enter a name for the new workflow (no spaces): ";
-	cin >> workflowName;
-	
-	//create the workflow file with the given name
-	createWorkflowFile(workflowName);
-	
-	// get the actors in the workflow
-	actorList = getActors();
-	
-	printMenu();
 	
 	//get the starting node 
 	cout << "\n\nFor the starting position: \n\tActor(number): ";
@@ -271,29 +261,13 @@ void WorkflowEditor::createWorkflow(void){
 	string nodeString = createNode(actor);
 	workflowFile << nodeString << endl;
 	
-	cout << "\n-1 to end";
 	// continue to create nodes till the end
-	int nodeCount = 1;
-	while (true){
-		//	if 4 nodes have been created, show the menu and set the node count to 0
-		if(nodeCount == 4){
-			nodeCount = 0;
-			printMenu();
-		}
-		
+	while (edgeCount != 0){
 		cout << "\nFor the next node: \n\tActor(number): ";
 		cin >> i_actor;
-		
-		//	end if user inputs -1
-		if(i_actor == -1){
-			cout << "Ending...\n" << endl;
-			break;
-		}
-		
 		actor = actorList[i_actor-1];
 		nodeString = createNode(actor);
 		workflowFile << nodeString << endl;
-		nodeCount++;
 	}
 	
 	/*
