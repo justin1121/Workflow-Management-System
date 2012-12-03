@@ -13,6 +13,7 @@ OBJS = AbstractNode.o \
 	   WorkflowLoader.o \
 	   DecisionEdge.o \
 	   WorkflowEditor.o \
+     UserInterface.o \
 	   main.o
 	   
 CC = g++
