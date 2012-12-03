@@ -234,6 +234,20 @@ string WorkflowEditor::handleTransition(int type){
 	}
 }
 
+//		Print the Editor Menu
+void WorkflowEditor::printMenu(void){
+
+	// show the different types of transitions
+	string transArray [] = {"SEQUENTIAL", "FORK", "MERGE", "JOIN", "DECISION","START", "STOP"}; 
+	cout << "\nTransition list:";
+	int i;
+	for(i = 0; i < 7; i++){
+		cout << "\n\t" << i+1;
+		cout << ": " << transArray[i];
+	}
+	return;
+}
+
 // this function creates a new workflow using the others as helper functions
 void WorkflowEditor::createWorkflow(void){
 	//get the name of the workflow 
@@ -247,14 +261,7 @@ void WorkflowEditor::createWorkflow(void){
 	// get the actors in the workflow
 	actorList = getActors();
 	
-	// show the different types of transitions
-	string transArray [] = {"SEQUENTIAL", "FORK", "MERGE", "JOIN", "DECISION","START", "STOP"}; 
-	cout << "\nTransition list:";
-	int i;
-	for(i = 0; i < 7; i++){
-		cout << "\n\t" << i+1;
-		cout << ": " << transArray[i];
-	}
+	printMenu();
 	
 	//get the starting node 
 	cout << "\n\nFor the starting position: \n\tActor(number): ";
@@ -264,13 +271,29 @@ void WorkflowEditor::createWorkflow(void){
 	string nodeString = createNode(actor);
 	workflowFile << nodeString << endl;
 	
+	cout << "\n-1 to end";
 	// continue to create nodes till the end
-	while (edgeCount != 0){
+	int nodeCount = 1;
+	while (true){
+		//	if 4 nodes have been created, show the menu and set the node count to 0
+		if(nodeCount == 4){
+			nodeCount = 0;
+			printMenu();
+		}
+		
 		cout << "\nFor the next node: \n\tActor(number): ";
 		cin >> i_actor;
+		
+		//	end if user inputs -1
+		if(i_actor == -1){
+			cout << "Ending...\n" << endl;
+			break;
+		}
+		
 		actor = actorList[i_actor-1];
 		nodeString = createNode(actor);
 		workflowFile << nodeString << endl;
+		nodeCount++;
 	}
 	
 	/*
