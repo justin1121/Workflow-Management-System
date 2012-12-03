@@ -31,9 +31,10 @@ void Simulator::simulate(void){
   node = graph.getStartNode().first;
   
   cout << "Starting the simulation...\nThis is the starting node:\n";
-  cout << "Actor: " << static_cast<StartStopNode *>(node)->getActor() << endl;
+  cout << "Actor: " << static_cast<StartStopNode *>(node)->getActor() 
+                                                                << endl;
   cout << "Message: " << static_cast<StartStopNode *>(node)->getMessage()
-                                                                      << endl;
+                                                                << endl;
   cout << "Moving on to first task...\n";
   node = graph.getNextNode().first;
   if(node == NULL){
@@ -48,6 +49,9 @@ void Simulator::simulate(void){
       exit(1);
     }
   }
+
+  cout << "Actor: " << static_cast<Task *>(node)->getActor() << "\n";
+  cout << "This is the end of the simulation... Exiting..." << "\n";
 }
 
 void Simulator::askIfCompleted(Task * task){

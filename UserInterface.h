@@ -9,6 +9,7 @@
  */
 #include "WorkflowEditor.h"
 #include "WorkflowEngine.h"
+#include "Simulator.h"
 
 class UserInterface {
 public:
@@ -20,5 +21,6 @@ private:
     WorkflowEditor editor;
     WorkflowLoader loader;
     WorkflowGraph  graph;
+    Simulator simulator;
 };
 
