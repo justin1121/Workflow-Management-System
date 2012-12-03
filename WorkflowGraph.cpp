@@ -63,36 +63,39 @@ NodeEdgePair WorkflowGraph::getNextNode(void){
     temp = graph[1][0];
     switch(temp.first->getTraverseType()){
       case SEQUENTIAL:
-        // if its transition type is SEQUENTIAL then push the node connected
+        // if its transition type is SEQUENTIAL then push the node 
+        // connected
         // to it into the queue for later retreival.
         que.push(graph[1][1].first);
         break;
       case FORK:
-        // if it is fork than do the same for as above but with all of the nodes
+        // if it is fork than do the same for as above but with all 
+        // of the nodes
         // after the first node
-        numEdges = ((Task *)temp.first)->getNumEdges();
+        numEdges = static_cast<Task *>(temp.first)->getNumEdges();
 
         for(int i = 1; i < numEdges; i++){
           que.push(graph[1][i].first);
         }
         break;
       case MERGE:
-        cout << "Error: The first data node cannot merge!";
+        cout << "Error: The first data node cannot merge!\n";
+        error = true;
         break;
       case JOIN:
-        cout << "Error: The first data node cannot join!";
+        cout << "Error: The first data node cannot join!\n";
         error = true;
         break;
       case DESICION:
         break;
       case START:
         cout << "Error: The graph may have been constructed wrong, "
-             << "this node should not be of START type!";
+             << "this node should not be of START type!\n";
         error = true;
         break;
       case STOP:
         cout << "Error: The graph may have been constructed wrong, "
-             << "this node should not be of STOP type!";
+             << "this node should not be of STOP type!\n";
         error = true;
         break;
     }
@@ -103,8 +106,10 @@ NodeEdgePair WorkflowGraph::getNextNode(void){
   } 
   else{
     // if its in the middle of traversing the graph than it pops the next
-    // node off of the queue and finds it in the graph vector and then visits
-    // its nodes and puts them in a queue depending on the type of tranistion.
+    // node off of the queue and finds it in the graph vector 
+    // and then visits
+    // its nodes and puts them in a queue depending on the type 
+    //of tranistion.
     AbstractNode * node = que.front();
     que.pop();
     VecPairNodeEdge v;
@@ -122,7 +127,7 @@ NodeEdgePair WorkflowGraph::getNextNode(void){
         que.push(v[1].first);
         break;
       case FORK:
-        numEdges = ((Task *)v[0].first)->getNumEdges();
+        numEdges = static_cast<Task *>(v[0].first)->getNumEdges();
 
         for(int i = 1; i < numEdges; i++){
           que.push(v[i].first);
@@ -136,7 +141,7 @@ NodeEdgePair WorkflowGraph::getNextNode(void){
         break;
       case START:
         cout << "Error: The graph may have been constructed wrong, "
-             << "this node should not be of START type!";
+             << "this node should not be of START type!\n";
         error = true;
         break;
       case STOP:

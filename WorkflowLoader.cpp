@@ -71,10 +71,9 @@ WorkflowGraph WorkflowLoader::generateGraph(WorkflowGraph graph){
     task = createNode(line);
     NodeEdgePair p(task, NULL);
     list<string> desicions;
-    cout << task->getTraverseType() << "\n";
-    switch(task->getTraverseType(), NULL, 2){
+
+    switch(task->getTraverseType()){
       case SEQUENTIAL:
-        cout << "HEY\n";
         if(initial){
           vec.push_back(p);
           initial = false;
@@ -105,6 +104,7 @@ WorkflowGraph WorkflowLoader::generateGraph(WorkflowGraph graph){
         break;
     }
   }
+  graph.addGraphVector(vec);
 
   return graph;
 }
@@ -117,6 +117,7 @@ void WorkflowLoader::openFile(void){
 	}
 	else{
 		cout << "Unable to open the file!\n";
+    exit(1);
 	}
 }
 
@@ -157,11 +158,11 @@ Task * WorkflowLoader::createNode(string line){
   getline(stream, task, ',');
   getline(stream, transType, ',');
   getline(stream, numEdges, ',');
-
+  
   t->setTask(task);
   t->setActor(actor);
-  t->setTraverseType(strtol(transType.c_str(), NULL, 2));
-  t->setNumEdges(strtol(numEdges.c_str(), NULL, 2));
+  t->setTraverseType(strtol(transType.c_str(), NULL, 10));
+  t->setNumEdges(strtol(numEdges.c_str(), NULL, 10));
 
   return t;
 }
@@ -221,7 +222,7 @@ StartStopNode * WorkflowLoader::createStartStopNode(string line){
 
   node->setActor(actor);
   node->setMessage(message);
-  node->setTraverseType(strtol(transType.c_str(), NULL, 2));
+  node->setTraverseType(strtol(transType.c_str(), NULL, 10));
 
   return node;
 }

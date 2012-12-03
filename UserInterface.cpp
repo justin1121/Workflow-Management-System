@@ -31,10 +31,10 @@ int UserInterface::getInput() {
         startEditing();
         break;
     case '2':
-        startSimulating();
+        showWorkflowList();
         break;
     case '3': 
-        showWorkflowList();
+        startSimulating();
         break;
     default: cout << "Please make another selection\n\n";
         break;
@@ -61,9 +61,11 @@ void UserInterface::startSimulating(void){
     graph = loader.createGraph();
     graph = loader.generateGraph(graph);
 
-    // this is where the simulator class comes in.
+    simulator.setGraph(graph);
+    simulator.simulate();
 }
 
 void UserInterface::showWorkflowList(void){
     editor.displayWorkflowList();
+    exit(0);
 }
