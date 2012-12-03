@@ -14,6 +14,7 @@ OBJS = AbstractNode.o \
 	   DecisionEdge.o \
 	   WorkflowEditor.o \
      UserInterface.o \
+     Simulator.o \
 	   main.o
 	   
 CC = g++
