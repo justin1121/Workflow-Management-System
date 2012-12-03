@@ -1,19 +1,24 @@
-#include "UserInterface.h"
+/*
+ *	Name: 			  Chris Dingwell 
+ *	Date: 			  November 22, 2012
+ * 	Organization:	Dalhousie - Faculty of Computer Science
+ *	
+ * 	Description:
+ *  Handles the start of the UI and than hands it off to the module
+ *  of the user's choice.
+ */
+
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
+
+#include "UserInterface.h"
+
 using namespace std;
 
-UserInterface::UserInterface() {
-
-}
-
-UserInterface::~UserInterface() {
-}
-
-int UserInterface::input() {
+int UserInterface::getInput() {
     
-    cout << "Welcome. Select a number option from the list below. \n\n1. BUILD Workflow \n2. VIEW Workflow \n3. USE Workflow\n";
+    cout << "Welcome. Select a number option from the list below. \n\n1. BUILD Workflow \n2. VIEW Workflows \n3. SIMULATE Workflow\n";
     char choice;
     
     while((choice!='1') && (choice!='2') && (choice!='3'))
@@ -22,15 +27,43 @@ int UserInterface::input() {
     
     switch (choice)
     {
-    case '1': cout << "You picked one";
+    case '1':
+        startEditing();
         break;
-    case '2': cout << "You picked two";
+    case '2':
+        startSimulating();
         break;
-    case '3': cout << "You picked three";
+    case '3': 
+        showWorkflowList();
         break;
     default: cout << "Please make another selection\n\n";
         break;
     }
     }
     
+}
+
+void UserInterface::startEditing(void){
+    editor.createWorkflow();
+}
+
+void UserInterface::startSimulating(void){
+    string fileName;
+    
+    cout << "Which workflow do you want to simulate?\n";
+    editor.displayWorkflowList();
+    cout << endl;
+
+    cin >> fileName;  
+    
+    loader.setFileName(fileName);
+    loader.openFile();
+    graph = loader.createGraph();
+    graph = loader.generateGraph(graph);
+
+    // this is where the simulator class comes in.
+}
+
+void UserInterface::showWorkflowList(void){
+    editor.displayWorkflowList();
 }

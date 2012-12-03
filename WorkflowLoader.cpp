@@ -17,27 +17,49 @@ using ::std::istream;
 using ::std::stringstream;
 using ::std::ios_base;
 
+/******************************************************************
+ * constructor
+ *
+ * Sets the fileName member variable and sets the bool member
+ * variable to true.
+ *****************************************************************/
+WorkflowLoader::WorkflowLoader(){
+}
+/******************************************************************
+ * constructor
+ *
+ * Sets the fileName member variable and sets the bool member
+ * variable to true.
+ *****************************************************************/
 WorkflowLoader::WorkflowLoader(string fileName){
   WorkflowLoader::fileName = fileName;
+  initial = true;
 }
 
 WorkflowLoader::~WorkflowLoader(void){
 	closeFile();
 }
 
+/******************************************************************
+ * createGraph 
+ *
+ * Sets the fileName member variable and sets the bool member
+ * variable to true.
+ *****************************************************************/
 WorkflowGraph WorkflowLoader::createGraph(void){
   WorkflowGraph graph;
   StartStopNode * node;
-  vector<pair<AbstractNode *, DecisionEdge *> > vec;
 
   graph.setTitle(getNextLine());
-
   node = createStartStopNode(getNextLine());
 
-  pair<AbstractNode *, DecisionEdge *> p(node, NULL);
+  NodeEdgePair p(node, NULL);
   vec.push_back(p);
  
   graph.addGraphVector(vec);
+  resetVector();
+
+  return graph;
 }
 
 WorkflowGraph WorkflowLoader::generateGraph(WorkflowGraph graph){
@@ -47,9 +69,22 @@ WorkflowGraph WorkflowLoader::generateGraph(WorkflowGraph graph){
 
   while((line = getNextLine()).compare("0") != 0){
     task = createNode(line);
+    NodeEdgePair p(task, NULL);
+    list<string> desicions;
+    cout << task->getTraverseType() << "\n";
     switch(task->getTraverseType(), NULL, 2){
       case SEQUENTIAL:
-        
+        cout << "HEY\n";
+        if(initial){
+          vec.push_back(p);
+          initial = false;
+        } 
+        else{
+          vec.push_back(p);
+          graph.addGraphVector(vec);
+          resetVector();
+          vec.push_back(p);
+        }
         break;
       case FORK:
         break;
@@ -58,9 +93,15 @@ WorkflowGraph WorkflowLoader::generateGraph(WorkflowGraph graph){
       case JOIN:
         break;
       case DESICION:
-        list<string> desicions;
-        
         desicions = createDesicionList(line, task->getNumEdges());
+        break;
+      case START:
+        break;
+      case STOP:
+        vec.push_back(p);
+        graph.addGraphVector(vec);
+        resetVector();
+        vec.push_back(p);
         break;
     }
   }
@@ -82,11 +123,15 @@ void WorkflowLoader::openFile(void){
 void WorkflowLoader::closeFile(void){
 	if(file->is_open()){
 		file->close();
-		cout << "File has been successfully close!\n";
+		cout << "File has been successfully closed!\n";
 	}
 	else{
 		cout << "File has already been closed!\n";
 	}
+}
+
+void WorkflowLoader::setFileName(string fileName){
+  WorkflowLoader::fileName = fileName;
 }
 
 string WorkflowLoader::getNextLine(void){
@@ -129,21 +174,20 @@ DecisionEdge * WorkflowLoader::createEdge(string decision){
   return edge;
 }
 
-vector<pair<AbstractNode *, DecisionEdge *> >  
-WorkflowLoader::addNodeVector(AbstractNode * node){
-  vector<pair<AbstractNode *, DecisionEdge *> > vec;
+VecPairNodeEdge WorkflowLoader::addNodeVector(AbstractNode * node){
+  VecPairNodeEdge vec;
 
-  pair<AbstractNode *, DecisionEdge *> p(node, NULL);
+  NodeEdgePair p(node, NULL);
    
   vec.push_back(p);
 
   return vec;
 }
 
-vector<pair<AbstractNode *, DecisionEdge *> >  
-WorkflowLoader::addEdgeVector(AbstractNode * task, DecisionEdge * edge,
-                              vector<pair<AbstractNode *, DecisionEdge *> > node){
-  pair<AbstractNode *, DecisionEdge *> p(task, edge);
+VecPairNodeEdge WorkflowLoader::addEdgeVector(AbstractNode * task, 
+                                              DecisionEdge * edge,
+                                              VecPairNodeEdge node){
+  NodeEdgePair p(task, edge);
   
   node.push_back(p);
 
@@ -167,14 +211,21 @@ list<string> WorkflowLoader::createDesicionList(string line, int num){
 StartStopNode * WorkflowLoader::createStartStopNode(string line){
   StartStopNode * node = new StartStopNode();
   string message,
+         actor,
          transType;
   stringstream stream(line, ios_base::in);
 
-  getline(stream, message);
-  getline(stream, transType);
+  getline(stream, actor, ','); 
+  getline(stream, message, ',');
+  getline(stream, transType, ',');
 
+  node->setActor(actor);
   node->setMessage(message);
   node->setTraverseType(strtol(transType.c_str(), NULL, 2));
 
   return node;
+}
+
+void WorkflowLoader::resetVector(void){
+  vec.clear();
 }

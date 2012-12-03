@@ -11,14 +11,29 @@
  
  #include "WorkflowEngine.h"
  
+/******************************************************************
+ * constructor
+ *
+ * Just initializes the decision variable to an empty string.
+ *****************************************************************/
 DecisionEdge::DecisionEdge(){
 	decision = "";
 }
 
+/******************************************************************
+ * setDecision 
+ *
+ * Sets the decision member variable.
+ *****************************************************************/
 void DecisionEdge::setDecision(string decision){
 	DecisionEdge::decision = decision;
 }
 
+/******************************************************************
+ * getDecision 
+ *
+ * Returns the decision member variable.
+ *****************************************************************/
 string DecisionEdge::getDecision(void){
 	return decision;
 }

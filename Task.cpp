@@ -10,12 +10,18 @@
 
 #include "WorkflowEngine.h"
 
+/******************************************************************
+ * constructor
+ *
+ * Initializes all of the variables.
+ *****************************************************************/
 Task::Task(){
 	task  = "";
 	actor = "";
 	type = -1;
 }
 
+// all of the getters and setters for all of the member variables.
 string Task::getActor(void){
 	return actor;
 }
